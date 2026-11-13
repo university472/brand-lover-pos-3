@@ -1,0 +1,428 @@
+/* ==========================================================================
+   Brand Lover POS — responsive layer for the web version.
+   Loaded AFTER the desktop stylesheet (global.css). Desktop (>1100px) is unchanged.
+     ≤1100px  tablet landscape: tighter grids
+     ≤900px   tablet portrait / phone: sidebar becomes a slide-in drawer, columns stack
+     ≤600px   phone: single column, full-screen dialogs, larger touch targets
+   ========================================================================== */
+
+/* ---------- connecting-to-server banner (web/transport.js) ---------- */
+#api-wait-banner {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translate(-50%, 140%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: calc(100vw - 24px);
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: #0f172a;
+  color: #fff;
+  font-size: 13px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35);
+  transition: transform 0.25s ease, visibility 0.25s;
+  pointer-events: none;
+  visibility: hidden;
+}
+#api-wait-banner.show {
+  transform: translate(-50%, 0);
+  visibility: visible;
+}
+
+/* Menu toggle lives inside the top bar at every width (an old rule floated it outside) */
+.topbar .sidebar-toggle {
+  position: static !important;
+  flex: 0 0 auto;
+}
+.api-wait-spinner {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: apiSpin 0.8s linear infinite;
+}
+@keyframes apiSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- demo credentials box on the login screen ---------- */
+.demo-logins {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border: 1px dashed #c7d2fe;
+  background: #eef2ff;
+  border-radius: 10px;
+  font-size: 12.5px;
+  color: #3730a3;
+}
+.demo-logins strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.demo-logins button {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  margin: 2px 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.demo-logins button:hover {
+  background: #e0e7ff;
+}
+.demo-logins code {
+  font-family: ui-monospace, Consolas, monospace;
+  font-weight: 700;
+}
+
+/* Tables never squeeze — they scroll sideways inside their box */
+.table-scroll,
+.report-table-wrap,
+.rd-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ======================= ≤1100px ======================= */
+@media (max-width: 1100px) {
+  .stat-grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .quick-actions {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .report-cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .coll-cards,
+  .cb-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sale-layout {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+}
+
+/* ======================= ≤900px: drawer navigation + stacked columns ======================= */
+@media (max-width: 900px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+  .app-shell,
+  .app-shell.sidebar-collapsed {
+    display: block;
+    height: 100vh;
+    height: 100dvh;
+  }
+  .app-main {
+    height: 100vh;
+    height: 100dvh;
+    margin-left: 0 !important;
+  }
+  .app-shell.is-mobile .sidebar {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 272px !important;
+    max-width: 84vw;
+    z-index: 1000;
+    padding: 20px 14px !important;
+    overflow-y: auto;
+    pointer-events: auto;
+    transform: translateX(-105%);
+    transition: transform 0.24s ease;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+  }
+  .app-shell.is-mobile.drawer-open .sidebar {
+    transform: translateX(0);
+  }
+  .drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: rgba(15, 23, 42, 0.5);
+    animation: fadeIn 0.2s ease;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* Top bar */
+  .topbar {
+    height: auto;
+    min-height: 56px;
+    padding: 8px 12px;
+    gap: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 30;
+  }
+  .topbar-left.with-toggle {
+    gap: 10px;
+    min-width: 0;
+  }
+  .topbar-left h1 {
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .topbar-date {
+    display: none;
+  }
+  .topbar-right {
+    gap: 8px;
+  }
+  .topbar-right .user-meta {
+    display: none;
+  }
+  .app-content {
+    padding: 14px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Two-pane screens → one column (list on top, detail below) */
+  .dash-columns,
+  .cashflow-grid,
+  .rp-grid,
+  .inv-layout,
+  .sale-layout,
+  .settings-page,
+  .st-layout,
+  .st-account-grid,
+  .credit-body,
+  .bc-body,
+  .ret-body,
+  .ret-refund,
+  .cb-cols,
+  .ledger-body,
+  .pv-foot,
+  .login-wrap {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .sale-layout,
+  .credit-body,
+  .ret-body,
+  .bc-body,
+  .ledger-body,
+  .st-layout,
+  .inv-layout {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+  .stat-grid,
+  .recon-summary,
+  .derived-box,
+  .bt-meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  /* Lists that had a fixed height inside a split screen get a sensible max on phones */
+  .inv-list,
+  .search-results {
+    max-height: 50vh;
+  }
+
+  /* Toolbars and filter bars wrap instead of overflowing */
+  .report-bar,
+  .rb-dates,
+  .rb-actions,
+  .panel-head,
+  .inv-pane-head,
+  .st-pane-head,
+  .po-tabs,
+  .modal-foot {
+    flex-wrap: wrap;
+  }
+  .po-tabs {
+    overflow-x: auto;
+  }
+  .report-bar > *,
+  .rb-dates > * {
+    min-width: 0;
+  }
+  .search-box {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* Wide tables scroll sideways */
+  .data-table {
+    min-width: 640px;
+  }
+  .table-scroll,
+  .report-table-wrap,
+  .rd-scroll,
+  .panel {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Keyboard shortcut hints are for desktop keyboards */
+  .hotkey-hint,
+  .hk-group,
+  .hk-title {
+    display: none !important;
+  }
+
+  /* Dialogs */
+  .modal-overlay {
+    padding: 10px;
+  }
+  .modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: calc(100dvh - 20px) !important;
+  }
+}
+
+/* ======================= ≤600px: phones ======================= */
+@media (max-width: 600px) {
+  .app-content {
+    padding: 10px;
+  }
+  .topbar .btn-ghost {
+    padding: 6px 8px;
+    font-size: 0;
+    gap: 0;
+  }
+  .topbar .btn-ghost svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .stat-grid,
+  .stat-grid-5,
+  .report-cards,
+  .coll-cards,
+  .cb-summary,
+  .recon-grid,
+  .recon-summary,
+  .derived-box,
+  .bt-meta,
+  .quick-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+  .form-grid,
+  .field-row,
+  .pv-row {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+  .span2 {
+    grid-column: auto !important;
+  }
+  .pay-type-group {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  /* Touch-friendly controls; 16px inputs stop iOS from zooming in on focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  .btn-primary,
+  .btn-secondary {
+    min-height: 42px;
+  }
+  .btn-icon {
+    padding: 8px;
+  }
+
+  /* Full-screen dialogs */
+  .modal-overlay {
+    padding: 0;
+    place-items: stretch;
+  }
+  .modal {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100dvh;
+    max-height: 100dvh !important;
+    border-radius: 0 !important;
+  }
+  .modal-head {
+    padding: 14px 16px;
+  }
+  .modal-body {
+    padding: 14px;
+    flex: 1;
+  }
+  .modal-foot {
+    padding: 12px 14px;
+  }
+  .modal-foot .btn-primary,
+  .modal-foot .btn-secondary {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* Login */
+  .login-wrap {
+    min-height: 100dvh;
+  }
+}
+
+/* Printing from the browser: never print the drawer/backdrop/banner */
+@media print {
+  .drawer-backdrop,
+  #api-wait-banner {
+    display: none !important;
+  }
+}
+
+/* ---------- fixes found on real phone screenshots ---------- */
+@media (max-width: 900px) {
+  /* Menu button: an older desktop rule positioned it absolutely (over the Logout button) */
+  .topbar .sidebar-toggle {
+    position: static !important;
+    flex: 0 0 auto;
+  }
+  /* Inventory / list toolbars: search on its own row, actions wrap below */
+  .inv-toolbar,
+  .toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    height: auto !important;
+  }
+  .inv-toolbar .search-box {
+    flex: 1 1 100%;
+    width: 100% !important;
+  }
+  .toolbar-actions {
+    width: 100%;
+  }
+  .toolbar-actions > * {
+    flex: 0 1 auto;
+  }
+  .search-box input {
+    min-width: 0;
+    width: 100%;
+  }
+  select {
+    max-width: 100%;
+  }
+}
